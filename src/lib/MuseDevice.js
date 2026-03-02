@@ -1,4 +1,4 @@
-import { MuseCircularBuffer } from "./CircularBuffer";
+import { MuseCircularBuffer } from "./CircularBuffer.js";
 
 /**
  * An abstract base class for interfaces that connect to a Muse headband.
