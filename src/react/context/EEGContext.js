@@ -54,6 +54,7 @@ export const EEGProvider = ({ children }) => {
     setMuse(null);
     setIsConnected(false);
     setIsMockData(false);
+    setRawEEG([]);
   };
 
   const value = {
