@@ -470,60 +470,51 @@ export class MuseBase {
       (event) => that.controlData(event)
     );
 
-    await connectCharAcrossServices(
-      this.#BATTERY_CHARACTERISTIC,
-      (event) => that.batteryData(event)
-    );
-
-    await connectCharAcrossServices(
-      this.#GYROSCOPE_CHARACTERISTIC,
-      (event) => that.gyroscopeData(event)
-    );
-
-    await connectCharAcrossServices(
-      this.#ACCELEROMETER_CHARACTERISTIC,
-      (event) => that.accelerometerData(event)
-    );
-
-    await connectCharAcrossServices(
-      this.#PPG1_CHARACTERISTIC,
-      (event) => that.ppgData(0, event)
-    );
-
-    await connectCharAcrossServices(
-      this.#PPG2_CHARACTERISTIC,
-      (event) => that.ppgData(1, event)
-    );
-
-    await connectCharAcrossServices(
-      this.#PPG3_CHARACTERISTIC,
-      (event) => that.ppgData(2, event)
-    );
-
-    // Try Muse S Athena EEG characteristics first
+    // Detect device type FIRST by probing Athena EEG characteristics.
+    // This must happen before requesting battery/gyro/accel, because
+    // Athena firmware in p50 multiplexed mode disables those dedicated
+    // characteristics (000b, 0009, 000a, 0004-0007).  On Athena, battery
+    // arrives via embedded 0x88/0x98 subpackets and IMU via 0x47 ACCGYRO
+    // inside the multiplexed EEG stream.
     const athenaChar1 = await connectCharAcrossServices(
       this.#ATHENA_EEG1_CHARACTERISTIC,
       (event) => that.athenaEegData(0, event)
     );
-    
+
     const athenaChar2 = await connectCharAcrossServices(
       this.#ATHENA_EEG2_CHARACTERISTIC,
       (event) => that.athenaEegData(1, event)
     );
-    
+
     const athenaChar3 = await connectCharAcrossServices(
       this.#ATHENA_EEG3_CHARACTERISTIC,
       (event) => that.athenaEegData(2, event)
     );
-    
-    // If Athena characteristics connected, we're on an Athena device
+
     if (athenaChar1 || athenaChar2 || athenaChar3) {
       this.#isAthena = true;
       console.log("[web-muse] Detected Muse S Athena - using multiplexed EEG format");
+      console.log("[web-muse] Skipping dedicated battery/gyro/accel characteristics (disabled in p50 mode)");
     } else {
-      // Fall back to legacy Muse EEG characteristics
-      console.log("[web-muse] Trying legacy Muse EEG characteristics...");
-      
+      // Legacy Muse — connect dedicated sensor characteristics
+      console.log("[web-muse] Detected legacy Muse - connecting dedicated sensor characteristics");
+
+      await connectCharAcrossServices(
+        this.#BATTERY_CHARACTERISTIC,
+        (event) => that.batteryData(event)
+      );
+
+      await connectCharAcrossServices(
+        this.#GYROSCOPE_CHARACTERISTIC,
+        (event) => that.gyroscopeData(event)
+      );
+
+      await connectCharAcrossServices(
+        this.#ACCELEROMETER_CHARACTERISTIC,
+        (event) => that.accelerometerData(event)
+      );
+
+      // Legacy EEG characteristics (0003-0007)
       await connectCharAcrossServices(
         this.#EEG1_CHARACTERISTIC,
         (event) => that.eegData(0, event)
@@ -549,6 +540,22 @@ export class MuseBase {
         (event) => that.eegData(4, event)
       );
     }
+
+    // PPG — available on both Athena (optics tags 0x34/0x35/0x36) and legacy
+    await connectCharAcrossServices(
+      this.#PPG1_CHARACTERISTIC,
+      (event) => that.ppgData(0, event)
+    );
+
+    await connectCharAcrossServices(
+      this.#PPG2_CHARACTERISTIC,
+      (event) => that.ppgData(1, event)
+    );
+
+    await connectCharAcrossServices(
+      this.#PPG3_CHARACTERISTIC,
+      (event) => that.ppgData(2, event)
+    );
 
     // 221e Muse v3 TLV protocol characteristics (d5913036-... CMD, 09bf2c52-... DATA)
     // stream IMU sensor data (accelerometer/gyroscope/magnetometer) in binary TLV
