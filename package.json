@@ -16,7 +16,7 @@
   "main": "src/lib/index.js",
   "exports": {
     ".": "./src/lib/index.js",
-    "./react": "./src/react/context/EEGContext.js",
+    "./react": "./src/react/context/EEGContext.jsx",
     "./react/hooks": "./src/react/hooks/useEEG.js",
     "./eeg": "./src/lib/eeg.js"
   },
@@ -25,6 +25,8 @@
     "example": "examples"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "example:vanilla": "npm --prefix examples/vanilla install && npm --prefix examples/vanilla run dev",
+    "example:react": "npm --prefix examples/react-app install && npm --prefix examples/react-app run dev"
   }
 }

@@ -1,0 +1,15 @@
+{
+  "name": "web-muse-vanilla-example",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "web-muse": "file:../../"
+  },
+  "devDependencies": {
+    "vite": "^6.2.0"
+  }
+}

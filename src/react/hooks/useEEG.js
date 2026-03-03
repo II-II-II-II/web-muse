@@ -1,5 +1,5 @@
-import { startRecording, stopRecording } from "../../lib/eeg";
-import { useEEG as useEEGContext } from "../context/EEGContext";
+import { startRecording, stopRecording } from "../../lib/eeg.js";
+import { useEEG as useEEGContext } from "../context/EEGContext.jsx";
 
 /**
  * Hook that extends the EEG context with recording functionality.

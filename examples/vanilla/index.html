@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>web-muse Vanilla Example</title>
+    <style>
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body { font-family: system-ui, sans-serif; background: #111; color: #eee; padding: 2rem; }
+      h1 { margin-bottom: 1rem; }
+      .controls { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; }
+      button {
+        padding: 0.5rem 1rem; border: none; border-radius: 6px;
+        font-size: 0.9rem; cursor: pointer; color: #fff;
+      }
+      button:disabled { opacity: 0.4; cursor: default; }
+      .btn-connect { background: #3b82f6; }
+      .btn-mock { background: #6b7280; }
+      .btn-disconnect { background: #ef4444; }
+      #status { margin-bottom: 1rem; font-size: 0.9rem; color: #9ca3af; }
+      #device-info { margin-bottom: 1rem; font-size: 0.85rem; color: #6ee7b7; }
+      .channels { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; }
+      .channel {
+        background: #1e1e2e; border-radius: 8px; padding: 1rem;
+        text-align: center;
+      }
+      .channel-label { font-size: 0.8rem; color: #9ca3af; margin-bottom: 0.25rem; }
+      .channel-value { font-size: 1.8rem; font-weight: bold; font-variant-numeric: tabular-nums; }
+      .channel-bar {
+        height: 4px; border-radius: 2px; margin-top: 0.5rem;
+        background: #333; overflow: hidden;
+      }
+      .channel-bar-fill { height: 100%; border-radius: 2px; transition: width 50ms; }
+      #battery { font-size: 0.85rem; color: #9ca3af; margin-bottom: 1rem; }
+    </style>
+  </head>
+  <body>
+    <h1>web-muse Vanilla Example</h1>
+    <div id="status">Disconnected</div>
+    <div id="device-info"></div>
+    <div id="battery"></div>
+    <div class="controls">
+      <button class="btn-connect" id="btn-connect">Connect to Muse</button>
+      <button class="btn-mock" id="btn-mock">Use Mock Data</button>
+      <button class="btn-disconnect" id="btn-disconnect" disabled>Disconnect</button>
+    </div>
+    <div class="channels" id="channels"></div>
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>
